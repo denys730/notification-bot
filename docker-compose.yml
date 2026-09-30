@@ -1,0 +1,35 @@
+services:
+  demo-api:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      MONGO_URI: mongodb://demo-mongo:27017
+    depends_on:
+      - demo-mongo
+
+  demo-mcp:
+    build: .
+    command: ["python", "src/mcp_server/main.py"]
+    ports:
+      - "8811:8811"
+    env_file:
+      - .env
+    environment:
+      MONGO_URI: mongodb://demo-mongo:27017
+      ALERTS_MCP_TRANSPORT: http
+      ALERTS_MCP_HOST: 0.0.0.0
+    depends_on:
+      - demo-api
+
+  demo-mongo:
+    image: mongo:7.0
+    ports:
+      - "27017:27017"
+    volumes:
+      - demo_mongo_data:/data/db
+
+volumes:
+  demo_mongo_data:

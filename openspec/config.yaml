@@ -1,0 +1,8 @@
+schema: spec-driven
+
+context: |
+  alert-bot-demo: a stand-in for alert-bot used for demonstrations. Python 3.13, FastAPI, motor.
+  Abstract alert types over a generic event stream; no scheduler, no live data, no delivery.
+  Specs under openspec/specs describe how the code behaves TODAY. Format: ## Purpose, then
+  ## Requirements with ### Requirement: sections, each with #### Scenario: blocks written as
+  - **WHEN** ... / - **THEN** ...
