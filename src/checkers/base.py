@@ -35,6 +35,11 @@ class Event:
     region: str | None = None
     # `{segmentation_id}__{value}` entries the entity currently belongs to.
     segments: tuple[str, ...] = ()
+    # Descriptive attributes an alert may quote. `amount` stays the single-unit figure every
+    # threshold is compared against; `currency` only names the unit it was reported in, and
+    # `source` is where it arrived through. Both are optional and no gate reads them.
+    currency: str | None = None
+    source: str | None = None
 
     @property
     def last_changed_at(self) -> datetime:

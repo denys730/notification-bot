@@ -3,6 +3,7 @@
 from checkers.base import AlertEvent, BaseChecker, Event, Suppression
 from checkers.checker_activity_drop import ActivityDropChecker
 from checkers.checker_heartbeat import HeartbeatChecker
+from checkers.checker_new_entity_breach import NewEntityBreachChecker
 from checkers.checker_status_stuck import StatusStuckChecker
 from checkers.checker_threshold_breach import ThresholdBreachChecker
 
@@ -11,6 +12,7 @@ ALL_CHECKERS: list[type[BaseChecker]] = [
     ThresholdBreachChecker,
     ActivityDropChecker,
     StatusStuckChecker,
+    NewEntityBreachChecker,
 ]
 
 
@@ -32,6 +34,7 @@ __all__ = [
     "BaseChecker",
     "Event",
     "HeartbeatChecker",
+    "NewEntityBreachChecker",
     "StatusStuckChecker",
     "Suppression",
     "ThresholdBreachChecker",

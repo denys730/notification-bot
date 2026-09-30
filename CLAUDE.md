@@ -6,7 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 `alert-bot-demo` is a demo alerting service. It exposes the admin API and the MCP surface cadmin's
 Alert Bot integration expects, so cadmin connects to it without changes — but its alert types
-are abstract (`heartbeat`, `threshold_breach`, `activity_drop`, `status_stuck`), nothing runs on a
+are abstract (`heartbeat`, `threshold_breach`, `activity_drop`, `status_stuck`,
+`new_entity_breach`), nothing runs on a
 schedule, nothing is delivered anywhere, and the alert journal is seeded. Treat the workflow as
 real and the data as fake.
 
@@ -137,6 +138,10 @@ in-memory Mongo.
    `describe_checker_type` read exactly that path.
 5. `tests/test_checker_<code>_unit.py`, one test per WHEN/THEN scenario of the spec, in the
    vocabulary of `CONTEXT.md`. `tests/test_checkers_registry_unit.py` guards steps 1–4.
+6. The catalogue row is seeded, so the row counts asserted in `tests/test_admin_checkers_api_unit.py`
+   and `tests/test_mcp_tools_unit.py` and the code list in `tests/test_mcp_checker_types_unit.py`
+   all move by one. Nothing points at them from the new checker — expect the failures and read them
+   as arithmetic, not as a regression.
 
 Nothing seeds the new row into a running brand automatically: an existing brand keeps its rows, and
 the new one arrives through the cadmin review link (or `seed --force`, which resets the brand).

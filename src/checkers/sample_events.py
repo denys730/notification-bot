@@ -21,7 +21,15 @@ ENTITIES = {
 def sample_events(now: datetime) -> list[Event]:
     events: list[Event] = []
 
-    def add(entity_id: str, kind: str, minutes_ago: float, amount: float = 0.0, status: str = "success") -> None:
+    def add(
+        entity_id: str,
+        kind: str,
+        minutes_ago: float,
+        amount: float = 0.0,
+        status: str = "success",
+        currency: str | None = None,
+        source: str | None = None,
+    ) -> None:
         profile = ENTITIES[entity_id]
         created = now - timedelta(minutes=minutes_ago)
         events.append(
@@ -34,6 +42,8 @@ def sample_events(now: datetime) -> list[Event]:
                 is_vip=profile["is_vip"],
                 region=profile["region"],
                 segments=profile["segments"],
+                currency=currency,
+                source=source,
             )
         )
 
@@ -43,6 +53,11 @@ def sample_events(now: datetime) -> list[Event]:
     add("10003", "inflow", minutes_ago=20, amount=5200)
     add("10002", "inflow", minutes_ago=90, amount=300)
     add("10002", "inflow", minutes_ago=30, amount=250, status="failed")
+    # 10006 registered three hours ago and put 1,500 in straight away; 10003 registered days ago, so
+    # its 5,200 is a threshold breach and not a new entity's first amount.
+    add("10006", "registration", minutes_ago=180)
+    add("10006", "inflow", minutes_ago=120, amount=1500, currency="EUR", source="card")
+    add("10003", "registration", minutes_ago=6000)
     # A pending outflow that has been sitting for three hours, and one that is fresh.
     add("10005", "outflow", minutes_ago=180, amount=700, status="pending")
     add("10004", "outflow", minutes_ago=15, amount=120, status="pending")

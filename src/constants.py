@@ -14,6 +14,7 @@ class CheckerCodes(StrEnum):
     THRESHOLD_BREACH = "threshold_breach"
     ACTIVITY_DROP = "activity_drop"
     STATUS_STUCK = "status_stuck"
+    NEW_ENTITY_BREACH = "new_entity_breach"
 
 
 class GlobalSettingNames(StrEnum):

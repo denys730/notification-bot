@@ -33,3 +33,12 @@ Two choices are deliberate: the demo SEEDS rows for a brand that has none, and
   large enough to demonstrate the review loop.
 - Nothing in this repository should grow towards real data sources. The moment it needs one, it
   has stopped being a demo.
+
+## Amendments
+
+- 2026-09-30, REQ-217BA7F9 (`openspec/changes/add-new-entity-breach-checker/`): a fifth abstract
+  alert type, `new_entity_breach`, and two optional descriptive attributes on the event —
+  `currency` (the unit the amount was reported in) and `source` (where it arrived through). The
+  decision stands: the attributes are strings that arrive with the event, there is still no data
+  source, no conversion and no lookup. The lists above read as they did when the decision was
+  taken; this note is what moved.
