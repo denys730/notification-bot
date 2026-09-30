@@ -5,7 +5,13 @@ from mcp_server.tools.checker_types import describe_alert_contract, describe_che
 
 async def test_every_type_is_specified() -> None:
     types = await list_checker_types()
-    assert [t["checker_code"] for t in types] == ["activity_drop", "heartbeat", "status_stuck", "threshold_breach"]
+    assert [t["checker_code"] for t in types] == [
+        "activity_drop",
+        "first_event_breach",
+        "heartbeat",
+        "status_stuck",
+        "threshold_breach",
+    ]
     assert all(t["specified"] and t["purpose"] and t["spec"].startswith("openspec/specs/checkers/") for t in types)
 
 

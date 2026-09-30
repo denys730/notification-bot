@@ -33,12 +33,12 @@ async def test_clusters_and_alerts(mcp_store) -> None:
     assert clusters["clusters"][0]["brands"] == ["ACME", "DEMO"] and "identity" not in clusters
 
     rows = await list_alerts(brand="demo")
-    assert len(rows) == 5 and all(row["cluster"] == "demo" and len(row["id"]) == 24 for row in rows)
+    assert len(rows) == 6 and all(row["cluster"] == "demo" and len(row["id"]) == 24 for row in rows)
     assert len(await list_alerts(brand="DEMO", checker_code="threshold_breach")) == 2
     assert [r["checker_name"] for r in await list_alerts(brand="DEMO", name_contains="stuck")] == [
         "Status Stuck 120m EU"
     ]
-    assert len(await list_alerts()) == 10
+    assert len(await list_alerts()) == 12
 
     one = await get_alert(rows[0]["id"], brand="DEMO")
     assert one["checker_name"] == rows[0]["checker_name"]

@@ -15,13 +15,27 @@ ENTITIES = {
     "10004": {"is_vip": False, "region": "ASIA", "segments": ("Business__31",)},
     "10005": {"is_vip": False, "region": "EU", "segments": ("Business__33", "Casino__vip_silver")},
     "10006": {"is_vip": False, "region": None, "segments": ()},
+    # Registered this morning; its first inflow is the one `first_event_breach` is about.
+    "10007": {"is_vip": False, "region": "EU", "segments": ("Business__31",)},
 }
+
+# Entities kept out of the background "session" rotation: 10005 so its pending outflow stays its
+# latest event, 10007 so adding it moves none of the counts the other rows are asserted on.
+OUT_OF_ROTATION = ("10005", "10007")
 
 
 def sample_events(now: datetime) -> list[Event]:
     events: list[Event] = []
 
-    def add(entity_id: str, kind: str, minutes_ago: float, amount: float = 0.0, status: str = "success") -> None:
+    def add(
+        entity_id: str,
+        kind: str,
+        minutes_ago: float,
+        amount: float = 0.0,
+        status: str = "success",
+        currency: str | None = None,
+        payment_method: str | None = None,
+    ) -> None:
         profile = ENTITIES[entity_id]
         created = now - timedelta(minutes=minutes_ago)
         events.append(
@@ -34,6 +48,8 @@ def sample_events(now: datetime) -> list[Event]:
                 is_vip=profile["is_vip"],
                 region=profile["region"],
                 segments=profile["segments"],
+                currency=currency,
+                payment_method=payment_method,
             )
         )
 
@@ -43,12 +59,14 @@ def sample_events(now: datetime) -> list[Event]:
     add("10003", "inflow", minutes_ago=20, amount=5200)
     add("10002", "inflow", minutes_ago=90, amount=300)
     add("10002", "inflow", minutes_ago=30, amount=250, status="failed")
+    # 10007 registers four hours ago and deposits 1,200 an hour later: a large first inflow from a fresh entity.
+    add("10007", "registration", minutes_ago=240)
+    add("10007", "inflow", minutes_ago=180, amount=1200, currency="EUR", payment_method="visa")
     # A pending outflow that has been sitting for three hours, and one that is fresh.
     add("10005", "outflow", minutes_ago=180, amount=700, status="pending")
     add("10004", "outflow", minutes_ago=15, amount=120, status="pending")
     # Background "session" volume: a steady baseline over the past week, quiet in the last half hour.
-    # 10005 stays out of it so its pending outflow remains its latest event.
-    rotation = [entity for entity in ENTITIES if entity != "10005"]
+    rotation = [entity for entity in ENTITIES if entity not in OUT_OF_ROTATION]
     for day in range(0, 8):
         for slot in range(0, 24 * 60):
             minutes_ago = day * 24 * 60 + slot

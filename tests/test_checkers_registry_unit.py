@@ -60,4 +60,5 @@ def test_sample_events_drive_every_catalogue_row() -> None:
     assert {a.entity_id for a in raised["Threshold Breach 5000 24h"]} == {"10001", "10003"}
     assert [a.entity_id for a in raised["Status Stuck 120m EU"]] == ["10005"]
     assert [a.entity_id for a in raised["Activity Drop 50% 30m"]] == ["DEMO"]
+    assert [a.entity_id for a in raised["First Event Breach 1000 24h"]] == ["10007"]
     assert raised["Heartbeat"] == []

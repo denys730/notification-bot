@@ -12,6 +12,7 @@ journal is seeded.
 | `threshold_breach` | an entity's successful amounts over a rolling window reach a threshold |
 | `activity_drop` | the brand's event volume falls below its own baseline |
 | `status_stuck` | an entity's latest event has sat in a non-final status for too long |
+| `first_event_breach` | an entity's first successful event of a kind reaches a threshold while the entity is new |
 
 Each has a specification under `openspec/specs/checkers/`, a config catalogue row, and unit tests.
 

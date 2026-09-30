@@ -48,8 +48,9 @@ so one checker can back several rows over the same brand with different threshol
 _Avoid_: monitor, rule, job, detector
 
 **Event**:
-One thing that happened to one entity: a kind, an amount, a status, a creation time. The only input
-a checker reads.
+One thing that happened to one entity: a kind, an amount, a status, a creation time, and optional
+descriptive fields no checker triggers on (a currency, a payment method). The only input a checker
+reads.
 _Avoid_: transaction, order, record
 
 ### Audience

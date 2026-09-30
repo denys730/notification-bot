@@ -113,6 +113,29 @@ than `pending_minutes`. Suppression TTL `cache_ttl_hours` (default 24).
 | `pending_statuses` | no | |
 | `cache_ttl_hours` | no (default 24) | |
 
+### first_event_breach — per entity; VIP, segment and region gates
+
+An entity's FIRST successful event of `event_kind` reaches `threshold` less than
+`max_entity_age_hours` after the entity's registration event (the earliest event of
+`registration_kind`). The age is measured at the event, not at the run. Suppression TTL
+`cache_ttl_hours` (default 24).
+
+| Knob | Required | Bounds | Meaning |
+| --- | --- | --- | --- |
+| `threshold` | yes | ≥ 0 | the amount the first event must reach |
+| `max_entity_age_hours` | yes | 1–168 | the entity must be younger than this at that event |
+| `event_kind` | yes | | the kind of event the rule watches |
+| `registration_kind` | no (default `registration`) | | the kind of event that marks registration |
+| `cache_ttl_hours` | no (default 24) | | suppression TTL |
+| `check_vip_users`, `check_non_vip_users` | no | | audience flags |
+| `mentions` | no | | Slack user ids to tag |
+
+```json
+{"checker_code": "first_event_breach", "checker_name": "First Event Breach 1000 24h", "frequency_minutes": 15,
+ "config": {"threshold": 1000, "max_entity_age_hours": 24, "event_kind": "inflow", "registration_kind": "registration", "cache_ttl_hours": 24, "check_vip_users": true, "check_non_vip_users": true, "mentions": {}}}
+```
+
 ## Checkers that honour the top-level `segments` gate
 
-`threshold_breach`, `status_stuck` (per entity); `activity_drop` (cohort). Not `heartbeat`.
+`threshold_breach`, `status_stuck`, `first_event_breach` (per entity); `activity_drop` (cohort).
+Not `heartbeat`.
