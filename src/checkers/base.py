@@ -35,6 +35,9 @@ class Event:
     region: str | None = None
     # `{segmentation_id}__{value}` entries the entity currently belongs to.
     segments: tuple[str, ...] = ()
+    # Descriptive only — no checker compares them, they are quoted in alert text when an event has them.
+    currency: str | None = None
+    payment_method: str | None = None
 
     @property
     def last_changed_at(self) -> datetime:

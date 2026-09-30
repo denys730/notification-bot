@@ -48,7 +48,7 @@ async def test_list_is_scoped_to_the_brand_header(client: AsyncClient) -> None:
     response = await client.get(CHECKERS)
     assert response.status_code == 200
     body = response.json()
-    assert body["meta"] == {"total_results": 5, "per_page": 50, "page": 1, "total_pages": 1}
+    assert body["meta"] == {"total_results": 6, "per_page": 50, "page": 1, "total_pages": 1}
     assert body["warnings"] == []
     assert {row["brand"] for row in body["checkers"]} == {"DEMO"}
     assert set(body["checkers"][0]) == ROW_KEYS
@@ -73,9 +73,9 @@ async def test_enabled_and_region_filters(client: AsyncClient) -> None:
         )
 
     eu = (await client.get(CHECKERS, params={"filter": query("EU")})).json()
-    assert eu["meta"]["total_results"] == 4  # three ungated enabled rows + the EU-gated one
+    assert eu["meta"]["total_results"] == 5  # four ungated enabled rows + the EU-gated one
     latam = (await client.get(CHECKERS, params={"filter": query("LATAM")})).json()
-    assert latam["meta"]["total_results"] == 3
+    assert latam["meta"]["total_results"] == 4
 
 
 async def test_ids_filter_and_pagination(client: AsyncClient) -> None:
@@ -85,7 +85,7 @@ async def test_ids_filter_and_pagination(client: AsyncClient) -> None:
 
     page = (await client.get(CHECKERS, params={"per_page": 2, "page": 2, "sort[]": "checker_name"})).json()
     assert len(page["checkers"]) == 2
-    assert page["meta"] == {"total_results": 5, "per_page": 2, "page": 2, "total_pages": 3}
+    assert page["meta"] == {"total_results": 6, "per_page": 2, "page": 2, "total_pages": 3}
 
     bad = await client.get(CHECKERS, params={"filter": "not-base64!!"})
     assert bad.status_code == 400
@@ -94,7 +94,7 @@ async def test_ids_filter_and_pagination(client: AsyncClient) -> None:
 async def test_codes_endpoint(client: AsyncClient) -> None:
     body = (await client.get(f"{CHECKERS}/codes")).json()
     assert {"code": "threshold_breach", "name": "Threshold Breach"} in body["codes"]
-    assert len(body["codes"]) == 4
+    assert len(body["codes"]) == 5
 
 
 async def test_get_single_wraps_the_row(client: AsyncClient) -> None:
@@ -114,7 +114,7 @@ async def test_create_as_cadmin_sends_it(client: AsyncClient) -> None:
     assert len(checker["id"]) == 24
     assert checker["created_at"].endswith("Z") and checker["updated_at"] is None
     assert checker["channels"] == ["#demo-test"]
-    assert (await client.get(CHECKERS)).json()["meta"]["total_results"] == 6
+    assert (await client.get(CHECKERS)).json()["meta"]["total_results"] == 7
 
 
 async def test_bulk_create(client: AsyncClient) -> None:
@@ -193,7 +193,7 @@ async def test_delete_removes_the_row(client: AsyncClient) -> None:
     assert (await client.delete(f"{CHECKERS}/{row['id']}/")).status_code == 204
     assert (await client.get(f"{CHECKERS}/{row['id']}/")).status_code == 404
     assert (await client.delete(f"{CHECKERS}/", params={"filter": encode_filter({"enabled": True})})).status_code == 204
-    assert (await client.get(CHECKERS)).json()["meta"]["total_results"] == 4
+    assert (await client.get(CHECKERS)).json()["meta"]["total_results"] == 5
 
 
 async def test_bearer_token_is_required(client: AsyncClient, seeded_store) -> None:

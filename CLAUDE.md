@@ -6,9 +6,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 `alert-bot-demo` is a demo alerting service. It exposes the admin API and the MCP surface cadmin's
 Alert Bot integration expects, so cadmin connects to it without changes — but its alert types
-are abstract (`heartbeat`, `threshold_breach`, `activity_drop`, `status_stuck`), nothing runs on a
-schedule, nothing is delivered anywhere, and the alert journal is seeded. Treat the workflow as
-real and the data as fake.
+are abstract (`heartbeat`, `threshold_breach`, `activity_drop`, `status_stuck`,
+`first_event_breach`), nothing runs on a schedule, nothing is delivered anywhere, and the alert
+journal is seeded. Treat the workflow as real and the data as fake.
 
 ## Ground rules
 
